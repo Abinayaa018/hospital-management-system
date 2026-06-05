@@ -15,6 +15,7 @@ type LoginResult = "success" | "invalid_password" | "not_found" | "error"
 interface AuthContextType {
   user: User | null
   isAuthenticated: boolean
+  loaded: boolean
   login: (email: string, password: string) => Promise<LoginResult>
   logout: () => void
 }
@@ -22,11 +23,14 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(() => {
-    if (typeof window === "undefined") return null
+  const [user, setUser] = useState<User | null>(null)
+  const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => {
     const stored = localStorage.getItem("kenko_user")
-    return stored ? JSON.parse(stored) : null
-  })
+    if (stored) setUser(JSON.parse(stored))
+    setLoaded(true)
+  }, [])
 
   const login = async (email: string, password: string): Promise<LoginResult> => {
     try {
@@ -59,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, loaded, login, logout }}>
       {children}
     </AuthContext.Provider>
   )
