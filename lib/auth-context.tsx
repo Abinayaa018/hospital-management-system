@@ -22,7 +22,11 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<User | null>(() => {
+    if (typeof window === "undefined") return null
+    const stored = localStorage.getItem("kenko_user")
+    return stored ? JSON.parse(stored) : null
+  })
 
   const login = async (email: string, password: string): Promise<LoginResult> => {
     try {
@@ -35,12 +39,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (res.status === 401) return "invalid_password"
       if (!res.ok) return "error"
       const data = await res.json()
-      setUser({
+      const loggedInUser = {
         name: data.name || "User",
         email: data.email,
         role: data.role || "User",
         avatar: data.avatar,
-      })
+      }
+      setUser(loggedInUser)
+      localStorage.setItem("kenko_user", JSON.stringify(loggedInUser))
       return "success"
     } catch {
       return "error"
@@ -49,6 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     setUser(null)
+    localStorage.removeItem("kenko_user")
   }
 
   return (
