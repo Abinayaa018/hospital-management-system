@@ -1,23 +1,23 @@
 // Mock data for Kenko Hospital Management System
 
 export const mockPatients = [
-  { id: "P001", name: "Sarah Johnson", age: 34, gender: "Female", phone: "+1 234-567-8901", email: "sarah.j@email.com", status: "Active", lastVisit: "2024-01-15", condition: "Hypertension" },
-  { id: "P002", name: "Michael Chen", age: 45, gender: "Male", phone: "+1 234-567-8902", email: "m.chen@email.com", status: "Active", lastVisit: "2024-01-14", condition: "Diabetes Type 2" },
-  { id: "P003", name: "Emily Davis", age: 28, gender: "Female", phone: "+1 234-567-8903", email: "emily.d@email.com", status: "Discharged", lastVisit: "2024-01-10", condition: "Fracture" },
-  { id: "P004", name: "James Wilson", age: 62, gender: "Male", phone: "+1 234-567-8904", email: "j.wilson@email.com", status: "Critical", lastVisit: "2024-01-15", condition: "Cardiac Arrest" },
-  { id: "P005", name: "Lisa Anderson", age: 39, gender: "Female", phone: "+1 234-567-8905", email: "l.anderson@email.com", status: "Active", lastVisit: "2024-01-13", condition: "Asthma" },
-  { id: "P006", name: "Robert Taylor", age: 51, gender: "Male", phone: "+1 234-567-8906", email: "r.taylor@email.com", status: "Active", lastVisit: "2024-01-12", condition: "Arthritis" },
-  { id: "P007", name: "Amanda Martinez", age: 29, gender: "Female", phone: "+1 234-567-8907", email: "a.martinez@email.com", status: "Discharged", lastVisit: "2024-01-08", condition: "Pregnancy" },
-  { id: "P008", name: "David Brown", age: 55, gender: "Male", phone: "+1 234-567-8908", email: "d.brown@email.com", status: "Active", lastVisit: "2024-01-11", condition: "COPD" },
+  { id: "P001", name: "Sarah Johnson", age: 34, gender: "Female", phone: "+91 98765 43210", email: "sarah.j@email.com", status: "Active", lastVisit: "2024-01-15", condition: "Hypertension" },
+  { id: "P002", name: "Michael Chen", age: 45, gender: "Male", phone: "+91 98765 43211", email: "m.chen@email.com", status: "Active", lastVisit: "2024-01-14", condition: "Diabetes Type 2" },
+  { id: "P003", name: "Emily Davis", age: 28, gender: "Female", phone: "+91 98765 43212", email: "emily.d@email.com", status: "Discharged", lastVisit: "2024-01-10", condition: "Fracture" },
+  { id: "P004", name: "James Wilson", age: 62, gender: "Male", phone: "+91 98765 43213", email: "j.wilson@email.com", status: "Critical", lastVisit: "2024-01-15", condition: "Cardiac Arrest" },
+  { id: "P005", name: "Lisa Anderson", age: 39, gender: "Female", phone: "+91 98765 43214", email: "l.anderson@email.com", status: "Active", lastVisit: "2024-01-13", condition: "Asthma" },
+  { id: "P006", name: "Robert Taylor", age: 51, gender: "Male", phone: "+91 98765 43215", email: "r.taylor@email.com", status: "Active", lastVisit: "2024-01-12", condition: "Arthritis" },
+  { id: "P007", name: "Amanda Martinez", age: 29, gender: "Female", phone: "+91 98765 43216", email: "a.martinez@email.com", status: "Discharged", lastVisit: "2024-01-08", condition: "Pregnancy" },
+  { id: "P008", name: "David Brown", age: 55, gender: "Male", phone: "+91 98765 43217", email: "d.brown@email.com", status: "Active", lastVisit: "2024-01-11", condition: "COPD" },
 ]
 
 export const mockDoctors = [
-  { id: "D001", name: "Dr. Elizabeth Harper", specialty: "Cardiology", phone: "+1 234-567-1001", email: "e.harper@kenko.com", status: "Available", patients: 45, rating: 4.9, image: "/placeholder.svg" },
-  { id: "D002", name: "Dr. William Foster", specialty: "Neurology", phone: "+1 234-567-1002", email: "w.foster@kenko.com", status: "In Surgery", patients: 38, rating: 4.8, image: "/placeholder.svg" },
-  { id: "D003", name: "Dr. Rachel Kim", specialty: "Pediatrics", phone: "+1 234-567-1003", email: "r.kim@kenko.com", status: "Available", patients: 62, rating: 4.9, image: "/placeholder.svg" },
-  { id: "D004", name: "Dr. Marcus Johnson", specialty: "Orthopedics", phone: "+1 234-567-1004", email: "m.johnson@kenko.com", status: "On Leave", patients: 41, rating: 4.7, image: "/placeholder.svg" },
-  { id: "D005", name: "Dr. Sofia Rodriguez", specialty: "Dermatology", phone: "+1 234-567-1005", email: "s.rodriguez@kenko.com", status: "Available", patients: 55, rating: 4.8, image: "/placeholder.svg" },
-  { id: "D006", name: "Dr. Alexander Patel", specialty: "General Medicine", phone: "+1 234-567-1006", email: "a.patel@kenko.com", status: "Available", patients: 78, rating: 4.6, image: "/placeholder.svg" },
+  { id: "D001", name: "Dr. Elizabeth Harper", specialty: "Cardiology", phone: "+91 98123 45678", email: "e.harper@kenko.com", status: "Available", patients: 45, rating: 4.9, image: "/placeholder.svg" },
+  { id: "D002", name: "Dr. William Foster", specialty: "Neurology", phone: "+91 98123 45679", email: "w.foster@kenko.com", status: "In Surgery", patients: 38, rating: 4.8, image: "/placeholder.svg" },
+  { id: "D003", name: "Dr. Rachel Kim", specialty: "Pediatrics", phone: "+91 98123 45680", email: "r.kim@kenko.com", status: "Available", patients: 62, rating: 4.9, image: "/placeholder.svg" },
+  { id: "D004", name: "Dr. Marcus Johnson", specialty: "Orthopedics", phone: "+91 98123 45681", email: "m.johnson@kenko.com", status: "On Leave", patients: 41, rating: 4.7, image: "/placeholder.svg" },
+  { id: "D005", name: "Dr. Sofia Rodriguez", specialty: "Dermatology", phone: "+91 98123 45682", email: "s.rodriguez@kenko.com", status: "Available", patients: 55, rating: 4.8, image: "/placeholder.svg" },
+  { id: "D006", name: "Dr. Alexander Patel", specialty: "General Medicine", phone: "+91 98123 45683", email: "a.patel@kenko.com", status: "Available", patients: 78, rating: 4.6, image: "/placeholder.svg" },
 ]
 
 export const mockAppointments = [
@@ -32,30 +32,30 @@ export const mockAppointments = [
 ]
 
 export const mockInvoices = [
-  { id: "INV001", patientName: "Sarah Johnson", date: "2024-01-15", amount: 450.00, status: "Paid", items: ["Consultation", "Blood Test", "ECG"] },
-  { id: "INV002", patientName: "Michael Chen", date: "2024-01-14", amount: 320.00, status: "Paid", items: ["Consultation", "Blood Sugar Test"] },
-  { id: "INV003", patientName: "Emily Davis", date: "2024-01-10", amount: 1250.00, status: "Pending", items: ["X-Ray", "Casting", "Medication"] },
-  { id: "INV004", patientName: "James Wilson", date: "2024-01-15", amount: 3500.00, status: "Partial", items: ["Emergency Care", "ICU", "Surgery"] },
-  { id: "INV005", patientName: "Lisa Anderson", date: "2024-01-13", amount: 180.00, status: "Paid", items: ["Consultation", "Inhaler"] },
-  { id: "INV006", patientName: "Robert Taylor", date: "2024-01-12", amount: 275.00, status: "Overdue", items: ["Consultation", "Physical Therapy"] },
+  { id: "INV001", patientName: "Sarah Johnson", date: "2024-01-15", amount: 4500.00, status: "Paid", items: ["Consultation", "Blood Test", "ECG"] },
+  { id: "INV002", patientName: "Michael Chen", date: "2024-01-14", amount: 3200.00, status: "Paid", items: ["Consultation", "Blood Sugar Test"] },
+  { id: "INV003", patientName: "Emily Davis", date: "2024-01-10", amount: 12500.00, status: "Pending", items: ["X-Ray", "Casting", "Medication"] },
+  { id: "INV004", patientName: "James Wilson", date: "2024-01-15", amount: 35000.00, status: "Partial", items: ["Emergency Care", "ICU", "Surgery"] },
+  { id: "INV005", patientName: "Lisa Anderson", date: "2024-01-13", amount: 1800.00, status: "Paid", items: ["Consultation", "Inhaler"] },
+  { id: "INV006", patientName: "Robert Taylor", date: "2024-01-12", amount: 2750.00, status: "Overdue", items: ["Consultation", "Physical Therapy"] },
 ]
 
 export const mockMedicines = [
-  { id: "M001", name: "Amoxicillin 500mg", category: "Antibiotics", stock: 500, unit: "Tablets", price: 0.45, supplier: "PharmaCorp", expiry: "2025-06-15", status: "In Stock" },
-  { id: "M002", name: "Metformin 850mg", category: "Diabetes", stock: 350, unit: "Tablets", price: 0.35, supplier: "MediSupply", expiry: "2025-08-20", status: "In Stock" },
-  { id: "M003", name: "Lisinopril 10mg", category: "Cardiovascular", stock: 45, unit: "Tablets", price: 0.55, supplier: "PharmaCorp", expiry: "2025-04-10", status: "Low Stock" },
-  { id: "M004", name: "Salbutamol Inhaler", category: "Respiratory", stock: 80, unit: "Units", price: 12.50, supplier: "HealthFirst", expiry: "2025-09-30", status: "In Stock" },
-  { id: "M005", name: "Ibuprofen 400mg", category: "Pain Relief", stock: 0, unit: "Tablets", price: 0.25, supplier: "MediSupply", expiry: "2025-07-15", status: "Out of Stock" },
-  { id: "M006", name: "Omeprazole 20mg", category: "Gastrointestinal", stock: 220, unit: "Capsules", price: 0.40, supplier: "PharmaCorp", expiry: "2025-05-25", status: "In Stock" },
-  { id: "M007", name: "Cetirizine 10mg", category: "Antihistamines", stock: 180, unit: "Tablets", price: 0.30, supplier: "HealthFirst", expiry: "2025-10-10", status: "In Stock" },
-  { id: "M008", name: "Amlodipine 5mg", category: "Cardiovascular", stock: 25, unit: "Tablets", price: 0.48, supplier: "MediSupply", expiry: "2025-03-20", status: "Low Stock" },
+  { id: "M001", name: "Amoxicillin 500mg", category: "Antibiotics", stock: 500, unit: "Tablets", price: 45, supplier: "PharmaCorp", expiry: "2025-06-15", status: "In Stock" },
+  { id: "M002", name: "Metformin 850mg", category: "Diabetes", stock: 350, unit: "Tablets", price: 35, supplier: "MediSupply", expiry: "2025-08-20", status: "In Stock" },
+  { id: "M003", name: "Lisinopril 10mg", category: "Cardiovascular", stock: 45, unit: "Tablets", price: 55, supplier: "PharmaCorp", expiry: "2025-04-10", status: "Low Stock" },
+  { id: "M004", name: "Salbutamol Inhaler", category: "Respiratory", stock: 80, unit: "Units", price: 125, supplier: "HealthFirst", expiry: "2025-09-30", status: "In Stock" },
+  { id: "M005", name: "Ibuprofen 400mg", category: "Pain Relief", stock: 0, unit: "Tablets", price: 25, supplier: "MediSupply", expiry: "2025-07-15", status: "Out of Stock" },
+  { id: "M006", name: "Omeprazole 20mg", category: "Gastrointestinal", stock: 220, unit: "Capsules", price: 40, supplier: "PharmaCorp", expiry: "2025-05-25", status: "In Stock" },
+  { id: "M007", name: "Cetirizine 10mg", category: "Antihistamines", stock: 180, unit: "Tablets", price: 30, supplier: "HealthFirst", expiry: "2025-10-10", status: "In Stock" },
+  { id: "M008", name: "Amlodipine 5mg", category: "Cardiovascular", stock: 25, unit: "Tablets", price: 48, supplier: "MediSupply", expiry: "2025-03-20", status: "Low Stock" },
 ]
 
 export const dashboardStats = {
   totalPatients: 1248,
   todayAppointments: 42,
   availableDoctors: 18,
-  monthlyRevenue: 125600,
+  monthlyRevenue: 1256000,
   patientGrowth: 12.5,
   appointmentGrowth: 8.3,
   revenueGrowth: 15.2,

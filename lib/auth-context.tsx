@@ -18,6 +18,7 @@ type LoginResult =
 
 interface AuthContextType {
   user: User | null
+  token: string | null
   isAuthenticated: boolean
   loaded: boolean
   login: (email: string, password: string) => Promise<LoginResult>
@@ -28,11 +29,14 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
+  const [token, setToken] = useState<string | null>(null)
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    const stored = localStorage.getItem("kenko_user")
-    if (stored) setUser(JSON.parse(stored))
+    const storedUser = localStorage.getItem("kenko_user")
+    const storedToken = localStorage.getItem("kenko_token")
+    if (storedUser) setUser(JSON.parse(storedUser))
+    if (storedToken) setToken(storedToken)
     setLoaded(true)
   }, [])
 
@@ -53,11 +57,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const loggedInUser = {
         name: data.name || "User",
         email: data.email,
-        role: data.role || "User",
+        role: data.role || "Patient",
         avatar: data.avatar,
       }
       setUser(loggedInUser)
+      setToken(data.token || null)
       localStorage.setItem("kenko_user", JSON.stringify(loggedInUser))
+      if (data.token) localStorage.setItem("kenko_token", data.token)
       return { status: "success" }
     } catch (error) {
       return {
@@ -69,11 +75,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     setUser(null)
+    setToken(null)
     localStorage.removeItem("kenko_user")
+    localStorage.removeItem("kenko_token")
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, loaded, login, logout }}>
+    <AuthContext.Provider value={{ user, token, isAuthenticated: !!user, loaded, login, logout }}>
       {children}
     </AuthContext.Provider>
   )

@@ -1,8 +1,18 @@
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://hospital-management-backend-r9rq.onrender.com"
 
+function getAuthToken(): string | null {
+  if (typeof window === "undefined") return null
+  return localStorage.getItem("kenko_token")
+}
+
 async function request(path: string, options?: RequestInit) {
+  const token = getAuthToken()
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  }
   const res = await fetch(`${API_BASE_URL}${path}`, {
-    headers: { "Content-Type": "application/json" },
+    headers,
     ...options,
   })
   if (!res.ok) throw new Error(await res.text())

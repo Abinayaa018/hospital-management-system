@@ -39,7 +39,7 @@ export default function RegisterPage() {
       const res = await fetch(`${API_BASE_URL}/api/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firstname, lastname, email, password, role: "User" }),
+        body: JSON.stringify({ firstname, lastname, email, password, role: "Patient" }),
       })
       const text = await res.text()
       let data: { message?: string } | null = null
