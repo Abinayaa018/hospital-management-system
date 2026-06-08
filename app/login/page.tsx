@@ -39,17 +39,17 @@ export default function LoginPage() {
 
     try {
       const result = await login(email, password)
-      if (result === "success") {
+      if (result.status === "success") {
         localStorage.setItem("kenko_last_login", email)
         router.push("/dashboard")
         return
       }
-      if (result === "not_found") {
+      if (result.status === "not_found") {
         setEmailError("This email is not registered.")
-      } else if (result === "invalid_password") {
+      } else if (result.status === "invalid_password") {
         setPasswordError("Incorrect password. Please try again.")
       } else {
-        setError("Invalid credentials. Please try again.")
+        setError(result.message || "Invalid credentials. Please try again.")
       }
     } catch {
       setError("An error occurred. Please try again.")

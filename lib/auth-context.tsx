@@ -10,7 +10,11 @@ interface User {
   avatar?: string
 }
 
-type LoginResult = "success" | "invalid_password" | "not_found" | "error"
+type LoginResult =
+  | { status: "success" }
+  | { status: "not_found" }
+  | { status: "invalid_password" }
+  | { status: "error"; message: string }
 
 interface AuthContextType {
   user: User | null
@@ -39,9 +43,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       })
-      if (res.status === 404) return "not_found"
-      if (res.status === 401) return "invalid_password"
-      if (!res.ok) return "error"
+      if (res.status === 404) return { status: "not_found" }
+      if (res.status === 401) return { status: "invalid_password" }
+      if (!res.ok) {
+        const message = await res.text()
+        return { status: "error", message: message || "Unexpected login failure" }
+      }
       const data = await res.json()
       const loggedInUser = {
         name: data.name || "User",
@@ -51,9 +58,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       setUser(loggedInUser)
       localStorage.setItem("kenko_user", JSON.stringify(loggedInUser))
-      return "success"
-    } catch {
-      return "error"
+      return { status: "success" }
+    } catch (error) {
+      return {
+        status: "error",
+        message: error instanceof Error ? error.message : "Network error",
+      }
     }
   }
 
