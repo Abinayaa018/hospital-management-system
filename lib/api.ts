@@ -1,4 +1,4 @@
-export const API_BASE_URL = "https://hospital-management-backend-r9rq.onrender.com"
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://hospital-management-backend-r9rq.onrender.com"
 
 async function request(path: string, options?: RequestInit) {
   const res = await fetch(`${API_BASE_URL}${path}`, {
