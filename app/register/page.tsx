@@ -41,18 +41,28 @@ export default function RegisterPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ firstname, lastname, email, password, role: "User" }),
       })
-      const data = await res.json()
+      const text = await res.text()
+      let data: { message?: string } | null = null
+      try {
+        data = text ? JSON.parse(text) : null
+      } catch {
+        data = null
+      }
       if (res.status === 409) {
-        setFormError("An account with this email already exists.")
+        setFormError(data?.message || "An account with this email already exists.")
         return
       }
       if (!res.ok) {
-        setFormError(data.message || "Failed to create account. Please try again.")
+        setFormError(data?.message || text || `Failed to create account. Please try again. (${res.status})`)
         return
       }
       router.push("/login")
-    } catch {
-      setFormError("Failed to create account. Please try again.")
+    } catch (error) {
+      setFormError(
+        error instanceof Error
+          ? error.message
+          : "Failed to create account. Please try again."
+      )
     } finally {
       setIsLoading(false)
     }
