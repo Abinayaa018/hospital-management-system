@@ -1,5 +1,6 @@
 "use client"
 
+import { useRoleGuard } from "@/lib/role-guard"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Download, TrendingUp, Users, Calendar, DollarSign, Activity, FileText } from "lucide-react"
@@ -49,6 +50,11 @@ const weeklyPatients = [
 ]
 
 export default function ReportsPage() {
+  const { hasAccess, loaded } = useRoleGuard(["Admin"])
+
+  if (!loaded) return <div className="flex min-h-screen items-center justify-center"><p className="text-muted-foreground">Loading...</p></div>
+  if (!hasAccess) return null
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

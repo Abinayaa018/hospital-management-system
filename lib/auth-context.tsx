@@ -14,6 +14,7 @@ type LoginResult =
   | { status: "success" }
   | { status: "not_found" }
   | { status: "invalid_password" }
+  | { status: "invalid_role" }
   | { status: "error"; message: string }
 
 interface AuthContextType {
@@ -22,6 +23,7 @@ interface AuthContextType {
   isAuthenticated: boolean
   loaded: boolean
   login: (email: string, password: string) => Promise<LoginResult>
+  loginWithRole: (email: string, password: string, role: string) => Promise<LoginResult>
   logout: () => void
 }
 
@@ -73,6 +75,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const loginWithRole = async (
+    email: string,
+    password: string,
+    role: string
+  ): Promise<LoginResult> => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, role }),
+      })
+      if (res.status === 404) return { status: "not_found" }
+      if (res.status === 401) return { status: "invalid_password" }
+      if (res.status === 403) return { status: "invalid_role" }
+      if (!res.ok) {
+        const message = await res.text()
+        return { status: "error", message: message || "Unexpected login failure" }
+      }
+      const data = await res.json()
+      const loggedInUser = {
+        name: data.name || "User",
+        email: data.email,
+        role: data.role || role,
+        avatar: data.avatar,
+      }
+      setUser(loggedInUser)
+      setToken(data.token || null)
+      localStorage.setItem("kenko_user", JSON.stringify(loggedInUser))
+      if (data.token) localStorage.setItem("kenko_token", data.token)
+      return { status: "success" }
+    } catch (error) {
+      return {
+        status: "error",
+        message: error instanceof Error ? error.message : "Network error",
+      }
+    }
+  }
+
   const logout = () => {
     setUser(null)
     setToken(null)
@@ -81,7 +121,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated: !!user, loaded, login, logout }}>
+    <AuthContext.Provider value={{ user, token, isAuthenticated: !!user, loaded, login, loginWithRole, logout }}>
       {children}
     </AuthContext.Provider>
   )

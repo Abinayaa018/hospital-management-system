@@ -1,6 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/lib/auth-context"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -15,6 +17,8 @@ type Doctor = { _id: string; name: string; specialty: string; phone: string; ema
 const emptyForm = { name: "", specialty: "", phone: "", email: "", status: "Available", patients: "0", rating: "5.0", experience: "" }
 
 export default function DoctorsPage() {
+  const { user, loaded } = useAuth()
+  const router = useRouter()
   const [doctors, setDoctors] = useState<Doctor[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null)
@@ -23,6 +27,15 @@ export default function DoctorsPage() {
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [form, setForm] = useState(emptyForm)
   const [loading, setLoading] = useState(true)
+
+  const canEdit = user?.role === "Admin" || user?.role === "Doctor"
+  const canDelete = user?.role === "Admin"
+
+  useEffect(() => {
+    if (loaded && user && !["Admin", "Doctor", "Patient"].includes(user.role || "")) {
+      router.push("/dashboard")
+    }
+  }, [loaded, user, router])
 
   const fetchDoctors = async () => {
     try { setDoctors(await api.get("/api/doctors")) }
@@ -71,23 +84,25 @@ export default function DoctorsPage() {
           <h1 className="text-3xl font-bold text-foreground">Doctors</h1>
           <p className="text-muted-foreground">Manage doctor profiles and schedules</p>
         </div>
-        <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-          <DialogTrigger asChild><Button className="gap-2"><Plus className="h-4 w-4" />Add Doctor</Button></DialogTrigger>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader><DialogTitle>Add New Doctor</DialogTitle><DialogDescription>Enter doctor information.</DialogDescription></DialogHeader>
-            <form onSubmit={handleAdd} className="space-y-4">
-              <div className="grid gap-4 sm:grid-cols-2">
-                {[["Full Name","name","text","Dr. John Smith"],["Specialty","specialty","text","Cardiology"],["Phone","phone","text","+1 234-567-8900"],["Email","email","email","doctor@kenko.com"],["Experience","experience","text","5 years"],["Rating","rating","number","5.0"]].map(([label,key,type,placeholder]) => (
-                  <div key={key} className="space-y-2">
-                    <label className="text-sm font-medium">{label}</label>
-                    <Input type={type} placeholder={placeholder} value={(form as any)[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))} required />
-                  </div>
-                ))}
-              </div>
-              <div className="flex justify-end gap-2"><Button type="button" variant="outline" onClick={() => setIsAddOpen(false)}>Cancel</Button><Button type="submit">Save Doctor</Button></div>
-            </form>
-          </DialogContent>
-        </Dialog>
+        {canEdit && (
+          <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+            <DialogTrigger asChild><Button className="gap-2"><Plus className="h-4 w-4" />Add Doctor</Button></DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader><DialogTitle>Add New Doctor</DialogTitle><DialogDescription>Enter doctor information.</DialogDescription></DialogHeader>
+              <form onSubmit={handleAdd} className="space-y-4">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {[["Full Name","name","text","Dr. John Smith"],["Specialty","specialty","text","Cardiology"],["Phone","phone","text","+1 234-567-8900"],["Email","email","email","doctor@kenko.com"],["Experience","experience","text","5 years"],["Rating","rating","number","5.0"]].map(([label,key,type,placeholder]) => (
+                    <div key={key} className="space-y-2">
+                      <label className="text-sm font-medium">{label}</label>
+                      <Input type={type} placeholder={placeholder} value={(form as any)[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))} required />
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-end gap-2"><Button type="button" variant="outline" onClick={() => setIsAddOpen(false)}>Cancel</Button><Button type="submit">Save Doctor</Button></div>
+              </form>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
 
       <Card className="border-border/50">
@@ -116,13 +131,17 @@ export default function DoctorsPage() {
                       </div>
                       <div className="flex items-center gap-1">
                         <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${getStatusColor(doctor.status)}`}>{doctor.status}</span>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild onClick={e => e.stopPropagation()}><Button variant="ghost" size="icon" className="h-6 w-6"><MoreHorizontal className="h-3 w-3" /></Button></DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={e => { e.stopPropagation(); setSelectedDoctor(doctor); setForm({ name: doctor.name, specialty: doctor.specialty, phone: doctor.phone, email: doctor.email, status: doctor.status, patients: String(doctor.patients), rating: String(doctor.rating), experience: doctor.experience }); setIsEditOpen(true) }}><Edit className="mr-2 h-4 w-4" />Edit</DropdownMenuItem>
-                            <DropdownMenuItem className="text-destructive" onClick={e => { e.stopPropagation(); handleDelete(doctor._id) }}><Trash2 className="mr-2 h-4 w-4" />Delete</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        {canEdit && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild onClick={e => e.stopPropagation()}><Button variant="ghost" size="icon" className="h-6 w-6"><MoreHorizontal className="h-3 w-3" /></Button></DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={e => { e.stopPropagation(); setSelectedDoctor(doctor); setForm({ name: doctor.name, specialty: doctor.specialty, phone: doctor.phone, email: doctor.email, status: doctor.status, patients: String(doctor.patients), rating: String(doctor.rating), experience: doctor.experience }); setIsEditOpen(true) }}><Edit className="mr-2 h-4 w-4" />Edit</DropdownMenuItem>
+                              {canDelete && (
+                                <DropdownMenuItem className="text-destructive" onClick={e => { e.stopPropagation(); handleDelete(doctor._id) }}><Trash2 className="mr-2 h-4 w-4" />Delete</DropdownMenuItem>
+                              )}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
                       </div>
                     </div>
                     <div className="mt-3 flex items-center gap-4 text-sm text-muted-foreground">
@@ -167,19 +186,21 @@ export default function DoctorsPage() {
       </Dialog>
 
       {/* Edit Dialog */}
-      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader><DialogTitle>Edit Doctor</DialogTitle></DialogHeader>
-          <form onSubmit={handleEdit} className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              {[["Full Name","name","text"],["Specialty","specialty","text"],["Phone","phone","text"],["Email","email","email"],["Experience","experience","text"],["Rating","rating","number"]].map(([label,key,type]) => (
-                <div key={key} className="space-y-2"><label className="text-sm font-medium">{label}</label><Input type={type} value={(form as any)[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))} /></div>
-              ))}
-            </div>
-            <div className="flex justify-end gap-2"><Button type="button" variant="outline" onClick={() => setIsEditOpen(false)}>Cancel</Button><Button type="submit">Save Changes</Button></div>
-          </form>
-        </DialogContent>
-      </Dialog>
+      {canEdit && (
+        <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader><DialogTitle>Edit Doctor</DialogTitle></DialogHeader>
+            <form onSubmit={handleEdit} className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                {[["Full Name","name","text"],["Specialty","specialty","text"],["Phone","phone","text"],["Email","email","email"],["Experience","experience","text"],["Rating","rating","number"]].map(([label,key,type]) => (
+                  <div key={key} className="space-y-2"><label className="text-sm font-medium">{label}</label><Input type={type} value={(form as any)[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))} /></div>
+                ))}
+              </div>
+              <div className="flex justify-end gap-2"><Button type="button" variant="outline" onClick={() => setIsEditOpen(false)}>Cancel</Button><Button type="submit">Save Changes</Button></div>
+            </form>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   )
 }

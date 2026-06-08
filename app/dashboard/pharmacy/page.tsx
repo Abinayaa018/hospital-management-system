@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRoleGuard } from "@/lib/role-guard"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,6 +15,7 @@ type Medicine = { _id: string; name: string; category: string; stock: number; un
 const emptyForm = { name: "", category: "", stock: "", unit: "Tablets", price: "", supplier: "", expiry: "", status: "In Stock" }
 
 export default function PharmacyPage() {
+  const { hasAccess, loaded } = useRoleGuard(["Admin"])
   const [medicines, setMedicines] = useState<Medicine[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [filterCategory, setFilterCategory] = useState("All")
@@ -28,6 +30,11 @@ export default function PharmacyPage() {
     catch (e) { console.error(e) }
     finally { setLoading(false) }
   }
+
+  useEffect(() => { if (hasAccess) fetchMedicines() }, [hasAccess])
+
+  if (!loaded) return <div className="flex min-h-screen items-center justify-center"><p className="text-muted-foreground">Loading...</p></div>
+  if (!hasAccess) return null
 
   useEffect(() => { fetchMedicines() }, [])
 

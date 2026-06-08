@@ -19,13 +19,13 @@ import { useAuth } from "@/lib/auth-context"
 import { cn } from "@/lib/utils"
 
 const navItems = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Patients", href: "/dashboard/patients", icon: Users },
-  { name: "Doctors", href: "/dashboard/doctors", icon: UserCog },
-  { name: "Appointments", href: "/dashboard/appointments", icon: Calendar },
-  { name: "Billing", href: "/dashboard/billing", icon: Receipt },
-  { name: "Pharmacy", href: "/dashboard/pharmacy", icon: Pill },
-  { name: "Reports", href: "/dashboard/reports", icon: BarChart3 },
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard, roles: ["Admin", "Doctor", "Patient"] },
+  { name: "Patients", href: "/dashboard/patients", icon: Users, roles: ["Admin", "Doctor"] },
+  { name: "Doctors", href: "/dashboard/doctors", icon: UserCog, roles: ["Admin", "Patient"] },
+  { name: "Appointments", href: "/dashboard/appointments", icon: Calendar, roles: ["Admin", "Doctor", "Patient"] },
+  { name: "Billing", href: "/dashboard/billing", icon: Receipt, roles: ["Admin", "Doctor"] },
+  { name: "Pharmacy", href: "/dashboard/pharmacy", icon: Pill, roles: ["Admin"] },
+  { name: "Reports", href: "/dashboard/reports", icon: BarChart3, roles: ["Admin"] },
 ]
 
 export function TopNavigation() {
@@ -51,7 +51,9 @@ export function TopNavigation() {
 
       {/* Navigation Links */}
       <nav className="hidden items-center gap-1 md:flex">
-        {navItems.map((item) => {
+        {navItems
+          .filter((item) => item.roles.includes(user?.role || "Patient"))
+          .map((item) => {
           const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href))
           return (
             <Link key={item.name} href={item.href}>

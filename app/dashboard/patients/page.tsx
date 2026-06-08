@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRoleGuard } from "@/lib/role-guard"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,6 +15,7 @@ type Patient = { _id: string; name: string; age: number; gender: string; phone: 
 const emptyForm = { name: "", age: "", gender: "", phone: "", email: "", status: "Active", lastVisit: "", condition: "" }
 
 export default function PatientsPage() {
+  const { hasAccess, loaded } = useRoleGuard(["Admin", "Doctor"])
   const [patients, setPatients] = useState<Patient[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null)
@@ -29,7 +31,7 @@ export default function PatientsPage() {
     finally { setLoading(false) }
   }
 
-  useEffect(() => { fetchPatients() }, [])
+  useEffect(() => { if (hasAccess) fetchPatients() }, [hasAccess])
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -48,6 +50,9 @@ export default function PatientsPage() {
     await api.delete(`/api/patients/${id}`)
     fetchPatients()
   }
+
+  if (!loaded) return <div className="flex min-h-screen items-center justify-center"><p className="text-muted-foreground">Loading...</p></div>
+  if (!hasAccess) return null
 
   const filtered = patients.filter(p =>
     p.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||

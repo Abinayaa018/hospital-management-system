@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRoleGuard } from "@/lib/role-guard"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,6 +15,7 @@ type Invoice = { _id: string; patientName: string; date: string; amount: number;
 const emptyForm = { patientName: "", date: "", amount: "", status: "Pending", items: "" }
 
 export default function BillingPage() {
+  const { hasAccess, loaded } = useRoleGuard(["Admin", "Doctor"])
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null)
@@ -27,6 +29,11 @@ export default function BillingPage() {
     catch (e) { console.error(e) }
     finally { setLoading(false) }
   }
+
+  useEffect(() => { if (hasAccess) fetchInvoices() }, [hasAccess])
+
+  if (!loaded) return <div className="flex min-h-screen items-center justify-center"><p className="text-muted-foreground">Loading...</p></div>
+  if (!hasAccess) return null
 
   useEffect(() => { fetchInvoices() }, [])
 

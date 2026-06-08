@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Eye, EyeOff, Heart } from "lucide-react"
 
 export default function LoginPage() {
+  const [role, setRole] = useState<"Patient" | "Doctor" | "Admin">("Patient")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -17,7 +18,7 @@ export default function LoginPage() {
   const [error, setError] = useState("")
   const [emailError, setEmailError] = useState("")
   const [passwordError, setPasswordError] = useState("")
-  const { login } = useAuth()
+  const { loginWithRole } = useAuth()
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -25,7 +26,6 @@ export default function LoginPage() {
     setIsLoading(true)
     setError("")
 
-    // client-side validation
     if (!emailRegex.test(email)) {
       setEmailError("Please enter a valid email.")
       setIsLoading(false)
@@ -38,16 +38,18 @@ export default function LoginPage() {
     }
 
     try {
-      const result = await login(email, password)
+      const result = await loginWithRole(email, password, role)
       if (result.status === "success") {
         localStorage.setItem("kenko_last_login", email)
         router.push("/dashboard")
         return
       }
       if (result.status === "not_found") {
-        setEmailError("This email is not registered.")
+        setEmailError(`This email is not registered as a ${role}.`)
       } else if (result.status === "invalid_password") {
         setPasswordError("Incorrect password. Please try again.")
+      } else if (result.status === "invalid_role") {
+        setError(`This account is not registered as a ${role}.`)
       } else {
         setError(result.message || "Invalid credentials. Please try again.")
       }
@@ -76,13 +78,26 @@ export default function LoginPage() {
           <CardHeader className="space-y-1 text-center">
             <CardTitle className="text-2xl">Welcome back</CardTitle>
             <CardDescription>
-              Enter your credentials to access the dashboard
+              Select your role and enter your credentials
             </CardDescription>
-            <p className="text-sm text-muted-foreground">
-              Don&apos;t have an account? <Link href="/register" className="text-primary underline">Sign up</Link>
-            </p>
           </CardHeader>
           <CardContent>
+            <div className="mb-4 flex gap-2">
+              {(["Patient", "Doctor", "Admin"] as const).map((r) => (
+                <button
+                  key={r}
+                  onClick={() => { setRole(r); setError(""); setEmailError(""); setPasswordError("") }}
+                  className={`flex-1 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
+                    role === r
+                      ? "bg-primary text-primary-foreground"
+                      : "border border-border bg-background text-foreground hover:border-primary/50"
+                  }`}
+                >
+                  {r}
+                </button>
+              ))}
+            </div>
+
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
                 <div className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
@@ -96,14 +111,11 @@ export default function LoginPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@kenko.com"
+                  placeholder={role === "Patient" ? "patient@kenko.com" : `${role.toLowerCase()}@kenko.com`}
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value)
                     if (emailError) setEmailError("")
-                  }}
-                  onBlur={() => {
-                    if (email && !emailRegex.test(email)) setEmailError("Please enter a valid email.")
                   }}
                   required
                   className="h-11"
@@ -124,9 +136,6 @@ export default function LoginPage() {
                       setPassword(e.target.value)
                       if (passwordError) setPasswordError("")
                     }}
-                    onBlur={() => {
-                      if (password && !passwordRegex.test(password)) setPasswordError("Password must be at least 8 characters and include letters and numbers.")
-                    }}
                     required
                     className="h-11 pr-10"
                   />
@@ -144,11 +153,14 @@ export default function LoginPage() {
                 {isLoading ? "Signing in..." : "Sign in"}
               </Button>
             </form>
-            <div className="mt-6 rounded-lg bg-muted/50 p-4">
-              <p className="text-center text-xs text-muted-foreground">
-                <strong>Demo:</strong> Use any email and password to sign in
-              </p>
-            </div>
+
+            {role === "Patient" && (
+              <div className="mt-4 border-t border-border pt-4">
+                <p className="text-center text-sm text-muted-foreground">
+                  Don&apos;t have an account? <Link href="/register" className="text-primary underline">Sign up</Link>
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
 
