@@ -57,24 +57,30 @@ export default function ReportsPage() {
   if (!loaded) return <div className="flex min-h-screen items-center justify-center"><p className="text-muted-foreground">Loading...</p></div>
   if (!hasAccess) return null
 
-  const departmentStats = reportData.departmentStats.length
+  const departmentStats = Array.isArray(reportData.departmentStats) && reportData.departmentStats.length
     ? reportData.departmentStats
     : [{ name: "No data", patients: 0, color: "#2a9d8f" }]
 
-  const appointmentTypes = reportData.appointmentTypes.length
+  const appointmentTypes = Array.isArray(reportData.appointmentTypes) && reportData.appointmentTypes.length
     ? reportData.appointmentTypes
     : []
 
-  const revenueSeries = (reportData as any).revenueSeries as { month: string; revenue: number }[]
-  const expensesSeries = (reportData as any).expensesSeries as { month: string; expenses: number }[]
+  const revenueSeries = (reportData as any).revenueSeries as { month: string; revenue: number }[] | undefined
+  const expensesSeries = (reportData as any).expensesSeries as { month: string; expenses: number }[] | undefined
 
-  const revenueVsExpenses = revenueSeries.map((r, idx) => ({
+  const safeRevenueSeries = Array.isArray(revenueSeries) ? revenueSeries : []
+  const safeExpensesSeries = Array.isArray(expensesSeries) ? expensesSeries : []
+
+  const revenueVsExpenses = safeRevenueSeries.map((r, idx) => ({
     month: r.month,
     revenue: r.revenue,
-    expenses: expensesSeries[idx]?.expenses ?? 0,
+    expenses: safeExpensesSeries[idx]?.expenses ?? 0,
   }))
 
-  const weeklyPatientsSeries = ((reportData as any).weeklyPatients ?? []) as { day: string; patients: number }[]
+  const weeklyPatientsSeries = (reportData as any).weeklyPatients
+    ? ((reportData as any).weeklyPatients as { day: string; patients: number }[])
+    : ([] as { day: string; patients: number }[])
+
 
 
 
