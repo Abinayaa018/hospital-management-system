@@ -44,7 +44,7 @@ export function TopNavigation() {
       {/* Logo */}
       <div className="flex items-center gap-2">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <img src="/kenko-logo-new-bg.png" alt="Kenko logo" className="h-5 w-5" />
+            <img src="/kenko-logo-new-bg.png" alt="Kenko logo" className="h-full w-full rounded-lg object-cover" />
         </div>
 
         <span className="text-lg font-bold text-foreground">Kenko</span>
