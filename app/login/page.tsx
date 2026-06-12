@@ -67,8 +67,12 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary/20 via-background to-accent/20 p-4">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary shadow-lg">
-            <Heart className="h-8 w-8 text-primary-foreground" />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary shadow-lg overflow-hidden">
+            <img
+              src="/kenko-logo-new-bg.png"
+              alt="Kenko logo"
+              className="h-full w-full object-cover"
+            />
           </div>
           <h1 className="text-3xl font-bold text-foreground">Kenko</h1>
           <p className="mt-2 text-muted-foreground">Hospital Management System</p>
