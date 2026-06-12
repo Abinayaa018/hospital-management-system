@@ -15,15 +15,15 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: '/kenko-logo.png',
+        url: '/kenko-logo-new-bg.png',
         media: '(prefers-color-scheme: light)',
       },
       {
-        url: '/kenko-logo.png',
+        url: '/kenko-logo-new-bg.png',
         media: '(prefers-color-scheme: dark)',
       },
     ],
-    apple: '/kenko-logo.png',
+    apple: '/kenko-logo-new-bg.png',
   },
 }
 
